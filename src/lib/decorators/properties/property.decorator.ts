@@ -24,6 +24,5 @@ export function ApiPropertyOptional(...args: any[]): PropertyDecorator {
   return applyDecorators(_ApiPropertyOptional(Object.assign(options, {
     description: extractString(...args, options?.description),
     required: false,
-    nullable: true,
   })));
 }
