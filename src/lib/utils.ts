@@ -52,7 +52,7 @@ export function extractOptions<T = any>(...args: any[]): T|false {
 
 /** @internal */
 export function extractStatus(method: RequestMethod|null, ...args: any[]): number|null {
-  const defaultStatus = method ? method === RequestMethod.POST ? 201 : 200 : null;
+  const defaultStatus = method === RequestMethod.POST ? 201 : 200;
   return args.find(r => isNumber(r)) || defaultStatus;
 }
 
