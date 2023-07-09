@@ -144,7 +144,7 @@ function ApiRoute(method: RequestMethod, pathOrStatusOrOptions?: IApiRoutePath|I
         });
       }
 
-      // set params
+      // set query
       if(isObject(options.query)){
         Object.entries(options.query).map(([fieldName, declaration]) => {
           decorators.push(ApiQuery(Object.assign(declaration || {}, {
@@ -230,9 +230,12 @@ function ApiRoute(method: RequestMethod, pathOrStatusOrOptions?: IApiRoutePath|I
         options.errors.filter(e => !!e).map(error => {
           const exception = error instanceof HttpException ? createHttpErrorFromException(error) : createHttpError(error);
           if(exception instanceof HttpException){
-
+            decorators.push(ApiResponse({
+              status: exception.getStatus(),
+              description: getStatusMessage(exception.getStatus())
+            }));
           }else{
-            decorators.push();
+            // unsupported
           }
         });
       }
