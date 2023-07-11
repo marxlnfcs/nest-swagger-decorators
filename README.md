@@ -1,9 +1,12 @@
-# Extended decorator functions for the @nestjs/swagger module
+<p align="center" style="font-size: 40px;">NestJS OpenApi Extended Decorators</p>
 
-[![npm](https://ico.y.gy/npm/dm/@marxlnfcs/nest-swagger-decorators?style=flat-square&logo=npm)](https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators)
-[![NPM](https://ico.y.gy/npm/l/@marxlnfcs/nest-swagger-decorators?style=flat-square&color=brightgreen)](https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators)
-[![3Snyk Vulnerabilities for npm package](https://ico.y.gy/snyk/vulnerabilities/npm/@marxlnfcs/nest-swagger-decorators?style=flat-square&logo=snyk)](https://snyk.io/test/npm/@marxlnfcs/nest-swagger-decorators)
-[![Website](https://ico.y.gy/website?down_color=red&down_message=offline&label=repository&up_color=success&up_message=online&url=https%3A%2F%2Fgithub.com%2Fmarxlnfcs%2Fnest-swagger-decorators&style=flat-square&logo=github)](https://github.com/marxlnfcs/nest-swagger-decorators)
+<p align="center">Extended decorator functions for the @nestjs/swagger module</p>
+<p align="center">
+    <a href="https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators" target="_blank"><img src="https://img.shields.io/npm/v/@marxlnfcs/nest-swagger-decorators.svg" alt="NPM Version" /></a>
+    <a href="https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators" target="_blank"><img src="https://img.shields.io/npm/l/@marxlnfcs/nest-swagger-decorators.svg" alt="Package License" /></a>
+    <a href="https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators" target="_blank"><img src="https://img.shields.io/npm/dm/@marxlnfcs/nest-swagger-decorators.svg" alt="NPM Downloads" /></a>
+    <a href="https://www.npmjs.com/package/@marxlnfcs/nest-swagger-decorators" target="_blank"><img src="https://img.shields.io/bundlephobia/min/@marxlnfcs/nest-swagger-decorators?label=size" alt="Package Size" /></a>
+</p>
 
 ## Installation
 ```

@@ -1,5 +1,9 @@
 import {HttpException, RequestMethod, Type} from "@nestjs/common";
 
+export function getExtraModelReference<T>(classRef: Type<T>): string {
+  return '#/components/schemas/' + classRef.name;
+}
+
 /** @internal */
 export function isNil(source: any): source is null {
   return source === undefined || source === null;
