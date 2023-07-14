@@ -1,13 +1,13 @@
 import {extractOptions, extractString} from "../../utils";
 import {applyDecorators} from "@nestjs/common";
 import {ApiProperty, ApiPropertyOptional} from "./property.decorator";
-import {IApiTypedOptionalOptions, IApiTypedOptions} from "../../interfaces/options.model";
+import {IApiPropertyOptions, IApiTypedOptionalOptions, IApiTypedOptions} from "../../interfaces/options.model";
 
 export function ApiEnumProperty(enumRef: any, options?: Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator;
 export function ApiEnumProperty(enumRef: any, description?: string, options?: Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator;
 export function ApiEnumProperty(enumRef: any, descriptionOrOptions?: string|Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>, opts?: Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator {
-  const [ description, options, schema ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts), buildEnumSchema(enumRef) ];
-  return applyDecorators(ApiProperty(description, Object.assign(options, {
+  const [ description, options, schema ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {}, buildEnumSchema(enumRef) ];
+  return applyDecorators(ApiProperty(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
     type: schema.types.length > 0 ? schema.types.join(' or ') : 'unknown',
     example: options?.example || schema.examples.length > 0 ? schema.examples[0].original : null,
     enum: Array.from(new Set(schema.examples.map(e => e.value))),
@@ -18,7 +18,7 @@ export function ApiEnumPropertyOptional(enumRef: any, options?: Omit<IApiTypedOp
 export function ApiEnumPropertyOptional(enumRef: any, description?: string, options?: Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator;
 export function ApiEnumPropertyOptional(enumRef: any, descriptionOrOptions?: string|Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'|'schema'>, opts?: Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator {
   const [ description, options, schema ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {}, buildEnumSchema(enumRef) ];
-  return applyDecorators(ApiPropertyOptional(description, Object.assign(options, {
+  return applyDecorators(ApiPropertyOptional(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
     type: schema.types.length > 0 ? schema.types.join(' or ') : 'unknown',
     example: options?.example || schema.examples.length > 0 ? schema.examples[0].original : null,
     enum: Array.from(new Set(schema.examples.map(e => e.value))),

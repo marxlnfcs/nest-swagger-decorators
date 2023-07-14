@@ -1,4 +1,5 @@
 import {HttpException, RequestMethod, Type} from "@nestjs/common";
+import {IApiClassRef} from "./interfaces/types.model";
 
 export function getExtraModelReference<T>(classRef: Type<T>): string {
   return '#/components/schemas/' + classRef.name;
@@ -61,8 +62,26 @@ export function extractStatus(method: RequestMethod|null, ...args: any[]): numbe
 }
 
 /** @internal */
-export function extractString(...args: any[]): number|null {
+export function extractString(...args: any[]): string|null {
   return args.find(r => isString(r)) || null;
+}
+
+/** @internal */
+export function isClass(v: any): v is Type {
+  return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+}
+
+/** @internal */
+export function extractClassRef(v: IApiClassRef): any {
+  if(v === undefined || v === null){
+    return null;
+  }else if(Array.isArray(v)){
+    return v;
+  }else if(isClass(v)){
+    return v;
+  }else if(typeof v === 'function'){
+    return v();
+  }
 }
 
 /** @internal */
