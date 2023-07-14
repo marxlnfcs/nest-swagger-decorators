@@ -1,4 +1,4 @@
-import {extractClassRef, extractOptions, extractString, getExtraModelReference} from "../../utils";
+import {extractClassRef, extractOptions, extractString, getApiSchemaPath} from "../../utils";
 import {applyDecorators} from "@nestjs/common";
 import {ApiProperty, ApiPropertyOptional} from "./property.decorator";
 import {IApiPropertyOptions, IApiTypedOptionalOptions, IApiTypedOptions} from "../../interfaces/options.model";
@@ -11,9 +11,14 @@ export function ApiAnyOfProperty(anyOf: IApiClassRefList, descriptionOrOptions?:
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   const models = extractClassRef(anyOf);
   return applyDecorators(
-      ApiExtraModels(...models),
+      function(target){
+          ApiExtraModels(...models)(target?.constructor || target)
+      },
       ApiProperty(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
-          anyOf: models.map(o => ({ $ref: getExtraModelReference(o) })),
+          type: 'array',
+          items: {
+              anyOf: models.map(o => ({ $ref: getApiSchemaPath(o) })),
+          }
       }))
   );
 }
@@ -24,9 +29,14 @@ export function ApiAnyOfPropertyOptional(anyOf: IApiClassRefList, descriptionOrO
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   const models = extractClassRef(anyOf);
   return applyDecorators(
-      ApiExtraModels(...models),
+      function(target){
+          ApiExtraModels(...models)(target?.constructor || target)
+      },
       ApiPropertyOptional(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
-          anyOf: models.map(o => ({ $ref: getExtraModelReference(o) })),
+          type: 'array',
+          items: {
+              anyOf: models.map(o => ({ $ref: getApiSchemaPath(o) })),
+          }
       }))
   );
 }

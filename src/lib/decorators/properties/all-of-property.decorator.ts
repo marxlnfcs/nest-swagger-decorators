@@ -1,4 +1,4 @@
-import {extractClassRef, extractOptions, extractString, getExtraModelReference} from "../../utils";
+import {extractClassRef, extractOptions, extractString, getApiSchemaPath} from "../../utils";
 import {applyDecorators} from "@nestjs/common";
 import {ApiProperty, ApiPropertyOptional} from "./property.decorator";
 import {IApiPropertyOptions, IApiTypedOptionalOptions, IApiTypedOptions} from "../../interfaces/options.model";
@@ -10,13 +10,15 @@ export function ApiAllOfProperty(allOf: IApiClassRefList, description?: string, 
 export function ApiAllOfProperty(allOf: IApiClassRefList, descriptionOrOptions?: string|Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>, opts?: Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator {
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   const models = extractClassRef(allOf);
-  if(!models || (Array.isArray(models) && !models.filter(i => !!i).length)){
-    return applyDecorators();
-  }
   return applyDecorators(
-      ApiExtraModels(...models),
+      function(target){
+          ApiExtraModels(...models)(target?.constructor || target)
+      },
       ApiProperty(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
-        allOf: models.map(o => ({ $ref: getExtraModelReference(o) })),
+          type: 'array',
+          items: {
+              allOf: models.map(o => ({ $ref: getApiSchemaPath(o) })),
+          }
       }))
   );
 }
@@ -26,13 +28,15 @@ export function ApiAllOfPropertyOptional(allOf: IApiClassRefList, description?: 
 export function ApiAllOfPropertyOptional(allOf: IApiClassRefList, descriptionOrOptions?: string|Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'>, opts?: Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'>): PropertyDecorator {
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   const models = extractClassRef(allOf);
-  if(!models || (Array.isArray(models) && !models.filter(i => !!i).length)){
-    return applyDecorators();
-  }
   return applyDecorators(
-      ApiExtraModels(...models),
+      function(target){
+          ApiExtraModels(...models)(target?.constructor || target)
+      },
       ApiPropertyOptional(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, {
-        allOf: models.map(o => ({ $ref: getExtraModelReference(o) })),
+          type: 'array',
+          items: {
+              allOf: models.map(o => ({ $ref: getApiSchemaPath(o) })),
+          }
       }))
   );
 }

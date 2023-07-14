@@ -1,8 +1,9 @@
 import {HttpException, RequestMethod, Type} from "@nestjs/common";
-import {IApiClassRef} from "./interfaces/types.model";
+import {IApiClassRef, IApiClassRefSingle, IApiClassRefSingleList} from "./interfaces/types.model";
+import {getSchemaPath} from "@nestjs/swagger";
 
-export function getExtraModelReference<T>(classRef: Type<T>): string {
-  return '#/components/schemas/' + classRef.name;
+export function getApiSchemaPath<T>(classRef: IApiClassRefSingle|IApiClassRefSingleList): string {
+  return getSchemaPath(classRef as any);
 }
 
 /** @internal */
