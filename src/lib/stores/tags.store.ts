@@ -28,15 +28,18 @@ export function getApiTagGroups(): ApiTagGroup[] {
 	const tagGroups: ApiTagGroup[] = [];
 	tagGroupControllers.map(controller => {
 		try{
+			const groups: string[] = [];
 			getApiMetadataTagGroups(controller).map(group => {
 				if(!tagGroups.filter(g => g.name.trim().toLowerCase() === group.trim().toLowerCase()).length){
 					tagGroups.push({ name: group, tags: [] });
+					groups.push(group);
 				}
 			})
 			Object.getOwnPropertyNames(controller).map((property) => {
 				try{
 					const descriptor = Object.getOwnPropertyDescriptor(controller, property);
-					(Reflect.getMetadata(DECORATORS.API_TAGS, descriptor.value) || []).map((tag: string) => tagGroups.map(group => {
+					(Reflect.getMetadata(DECORATORS.API_TAGS, descriptor.value) || []).map((tag: string) => groups.map(groupName => {
+						const group = tagGroups.find(g => g.name.trim().toLowerCase() === groupName.trim().toLowerCase());
 						if(!group.tags.filter(t => t.trim().toLowerCase() === tag.trim().toLowerCase()).length){
 							group.tags.push(tag);
 						}
