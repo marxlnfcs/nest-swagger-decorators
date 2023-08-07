@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {DECORATORS} from "@nestjs/swagger/dist/constants";
 
 /** @internal */
 const ApiMetadataExceptionsKey = Symbol('Api Exceptions Store');
@@ -20,22 +21,39 @@ export function setApiMetadataExceptions(exceptions: IApiMetadataExceptions, tar
 }
 
 /** @internal */
-export function getApiMetadataTagGroups(target: any, propertyKey?: string): string[] {
-  return Reflect.getMetadata(ApiMetadataApiGroupsKey, target, propertyKey) || [];
+export function getApiMetadataTags(target: any, descriptor?: PropertyDescriptor): string[] {
+  try{
+    return Reflect.getMetadata(DECORATORS.API_TAGS, descriptor ? descriptor.value : target) || [];
+  }catch{
+    return [];
+  }
 }
 
 /** @internal */
-export function setApiMetadataTagGroups(tagGroups: string[], target: any, propertyKey?: string) {
-  Reflect.defineMetadata(ApiMetadataApiGroupsKey, tagGroups.map(g => g.trim()).sort(), target, propertyKey);
+export function getApiMetadataTagGroups(target: any, descriptor?: PropertyDescriptor): string[] {
+  try{
+    return Reflect.getMetadata(ApiMetadataApiGroupsKey, descriptor ? descriptor.value : target) || [];
+  }catch{
+    return [];
+  }
 }
 
 /** @internal */
-export function addApiMetadataTagGroups(tagGroups: string[], target: any, propertyKey?: string) {
-  const groups = getApiMetadataTagGroups(target, propertyKey);
+export function setApiMetadataTagGroups(tagGroups: string[], target: any, descriptor?: PropertyDescriptor) {
+  try{
+    Reflect.defineMetadata(ApiMetadataApiGroupsKey, tagGroups.map(g => g.trim()).sort(), descriptor ? descriptor.value : target);
+  }catch{
+    // ignore
+  }
+}
+
+/** @internal */
+export function addApiMetadataTagGroups(tagGroups: string[], target: any, descriptor?: PropertyDescriptor) {
+  const groups = getApiMetadataTagGroups(target, descriptor);
   for(let group of tagGroups.filter(g => !!g)){
     if(!groups.map(g => g.trim().toLowerCase()).includes(group.trim().toLowerCase())){
       groups.push(group.trim());
     }
   }
-  setApiMetadataTagGroups(groups, target, propertyKey);
+  setApiMetadataTagGroups(groups, target, descriptor);
 }
