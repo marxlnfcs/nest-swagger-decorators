@@ -10,9 +10,9 @@ import {
   isFunction,
   isObject,
   isString
-} from "../../utils";
+} from "../utils";
 import {applyDecorators, HttpCode, HttpException, RequestMapping, RequestMethod, Type} from "@nestjs/common";
-import {IApiRouteOptions, IApiRoutePath} from "../../interfaces/options.model";
+import {IApiRouteOptions, IApiRoutePath} from "../interfaces/options.model";
 import {
   ApiBody,
   ApiConsumes,
@@ -25,8 +25,9 @@ import {
   ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
-import {IApiBodyOptions} from "../../interfaces/request-options.model";
-import {IApiResponseOptions} from "../../interfaces/response-options.model";
+import {IApiBodyOptions} from "../interfaces/request-options.model";
+import {IApiResponseOptions} from "../interfaces/response-options.model";
+import {ApiTagGroups} from "./tag-group.decorator";
 
 export function ApiAll(status?: number): MethodDecorator;
 export function ApiAll(options?: IApiRouteOptions|false, status?: number): MethodDecorator;
@@ -124,6 +125,11 @@ function ApiRoute(method: RequestMethod, pathOrStatusOrOptions?: IApiRoutePath|I
       // set tags
       if(isArray(options?.tags)){
         decorators.push(ApiTags(...options.tags));
+      }
+
+      // set tagGroups
+      if(isArray(options?.tagGroups)){
+        decorators.push(ApiTagGroups(...options.tagGroups));
       }
 
       // set headers

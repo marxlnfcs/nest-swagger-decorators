@@ -1,7 +1,8 @@
 import {applyDecorators, Controller} from "@nestjs/common";
-import {IApiControllerOptions} from "../../interfaces/options.model";
+import {IApiControllerOptions} from "../interfaces/options.model";
 import {ApiExcludeController, ApiHeader, ApiParam, ApiQuery, ApiTags} from "@nestjs/swagger";
-import {extractOptions, extractPath, isArray, isFalse, isObject} from "../../utils";
+import {extractOptions, extractPath, isArray, isFalse, isObject} from "../utils";
+import {ApiTagGroups} from "./tag-group.decorator";
 
 export function ApiController(options?: IApiControllerOptions|false): ClassDecorator;
 export function ApiController(prefix: string, options?: Omit<IApiControllerOptions, 'path'>|false): ClassDecorator;
@@ -29,6 +30,11 @@ export function ApiController(prefixOrOptions: string|IApiControllerOptions|fals
       // set tags
       if(isArray(options?.tags)){
         decorators.push(ApiTags(...options.tags));
+      }
+
+      // set tagGroup
+      if(isArray(options?.tagGroups)){
+        decorators.push(ApiTagGroups(...options.tagGroups));
       }
 
       // set headers

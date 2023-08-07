@@ -17,7 +17,8 @@ npm i @marxlnfcs/nest-swagger-decorators
 ### Controller
 ```javascript
 @ApiController('/', {
-    tags: { ... },
+    tags: [ ... ],
+    tagGroups: [ ... ],
     header: { ... },
     params: { ... },
     query: { ... },
@@ -26,7 +27,8 @@ export class AppController {}
 
 @ApiController({
     path: '/',
-    tags: { ... },
+    tags: [ ... ],
+    tagGroups: [ ... ],
     header: { ... },
     params: { ... },
     query: { ... },
@@ -62,4 +64,35 @@ export class AppController {
     ping(){ ... }
     
 }
+```
+
+### TagGroups
+```javascript
+@ApiController('/')
+@TagGroups(...)
+export class AppController {
+
+	@ApiGet('/', { ... })
+    @ApiTagGroups(...)
+	ping(){ ... }
+
+}
+```
+
+### Retrieve TagGroups
+```javascript
+import {getApiTagGroups} from "@marxlnfcs/nest-swagger-decorators";
+
+const tagGroups = getApiTagGroups();
+
+/**
+ * RETURNS:
+ * [
+ *  {
+ *    name: string,
+ *    tags: string[]
+ *  },
+ *  ...
+ * ]
+ */
 ```

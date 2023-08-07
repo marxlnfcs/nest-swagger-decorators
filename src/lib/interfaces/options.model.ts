@@ -16,6 +16,7 @@ export interface IApiRouteOptions {
 
     // tags
     tags?: string[],
+    tagGroups?: string[];
 
     // body, query and params
     body?: [Type] | Type | IApiBodyOptions;
@@ -37,6 +38,7 @@ export interface IApiControllerOptions {
     path?: IApiRoutePath;
 
     // tags
+    tagGroups?: string[];
     tags?: string[],
 
     // header, query and params
