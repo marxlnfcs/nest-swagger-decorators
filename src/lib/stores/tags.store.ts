@@ -83,33 +83,3 @@ export function getApiTagGroups(): ApiTagGroup[] {
 	return tagGroups;
 
 }
-
-export function getApiTagGroup2s(): ApiTagGroup[] {
-	const tagGroups: ApiTagGroup[] = [];
-	tagGroupControllers.map(controller => {
-		try{
-			const groups: string[] = [];
-			getApiMetadataTagGroups(controller).map(group => {
-				if(!tagGroups.filter(g => g.name.trim().toLowerCase() === group.trim().toLowerCase()).length){
-					tagGroups.push({ name: group, tags: [] });
-					groups.push(group.trim().toLowerCase());
-				}
-			})
-			Object.getOwnPropertyNames(controller).map((property) => {
-				try{
-					const descriptor = Object.getOwnPropertyDescriptor(controller, property);
-					(Reflect.getMetadata(DECORATORS.API_TAGS, descriptor.value) || []).map((tag: string) => tagGroups.filter(group => groups.includes(group.name.trim().toLowerCase())).map(group => {
-						if(!group.tags.filter(t => t.trim().toLowerCase() === tag.trim().toLowerCase()).length){
-							group.tags.push(tag);
-						}
-					}));
-				}catch{
-					// ignore
-				}
-			});
-		}catch{
-			// ignore
-		}
-	});
-	return tagGroups;
-}
