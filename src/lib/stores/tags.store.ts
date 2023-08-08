@@ -1,4 +1,3 @@
-import {DECORATORS} from "@nestjs/swagger/dist/constants";
 import {getApiMetadataTagGroups, getApiMetadataTags} from "../metadata";
 
 export type ApiTagGroup = { name: string; tags: string[]; }

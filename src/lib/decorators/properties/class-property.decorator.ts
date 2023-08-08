@@ -1,4 +1,4 @@
-import {extractOptions, extractString} from "../../utils";
+import {extractOptions, extractString, resolveClassRef} from "../../utils";
 import {applyDecorators} from "@nestjs/common";
 import {ApiProperty, ApiPropertyOptional} from "./property.decorator";
 import {IApiPropertyOptions, IApiTypedOptionalOptions, IApiTypedOptions} from "../../interfaces/options.model";
@@ -9,7 +9,7 @@ export function ApiClassProperty(classRef: IApiClassRefSingle|IApiClassRefSingle
 export function ApiClassProperty(classRef: IApiClassRefSingle|IApiClassRefSingleList, descriptionOrOptions?: string|Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>, opts?: Omit<IApiTypedOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator {
     const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ]
     return applyDecorators(
-        ApiProperty(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, { type: classRef }))
+        ApiProperty(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, { type: resolveClassRef(classRef) }))
     );
 }
 
@@ -18,6 +18,6 @@ export function ApiClassPropertyOptional(classRef: IApiClassRefSingle|IApiClassR
 export function ApiClassPropertyOptional(classRef: IApiClassRefSingle|IApiClassRefSingleList, descriptionOrOptions?: string|Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'|'schema'>, opts?: Omit<IApiTypedOptionalOptions, 'type'|'enum'|'enumName'|'schema'>): PropertyDecorator {
     const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ]
     return applyDecorators(
-        ApiPropertyOptional(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, { type: classRef }))
+        ApiPropertyOptional(description, Object.assign<IApiPropertyOptions, IApiPropertyOptions>(options, { type: resolveClassRef(classRef) }))
     );
 }

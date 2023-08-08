@@ -170,3 +170,17 @@ export function createHttpErrorFromException(exception: Error|HttpException): Er
 export function transformException(exception: Error|HttpException): Error|HttpException {
   return exception;
 }
+
+/** @internal */
+export function resolveClassRef(type: any): any {
+  if(Array.isArray(type)){
+    type.map(t => {
+      if(typeof t === 'function' && !t.name){
+        Object.defineProperty(t, 'name', { value: 'type', configurable: true });
+      }
+    })
+  }else if(typeof type === 'function' && !type.name){
+    Object.defineProperty(type, 'name', { value: 'type', configurable: true });
+  }
+  return type;
+}
