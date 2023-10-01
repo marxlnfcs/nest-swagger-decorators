@@ -8,20 +8,7 @@ export function addApiTagGroupController(...controllers: any[]){
 	tagGroupControllers.push(...controllers.filter(c => !!c));
 }
 
-// export function addApiTagGroup(groupName: string, tags: string[]): void {
-// 	if(!tagGroupsStore.filter(g => g.name.trim().toLowerCase() === groupName.trim().toLowerCase()).length){
-// 		tagGroupsStore.push({ name: groupName, tags: [] });
-// 	}
-// 	const group = tagGroupsStore.find(g => g.name.trim().toLowerCase() === group.trim().toLowerCase());
-// 	for(let tag of tags){
-// 		if(!group.tags.filter(t => t.trim().toLowerCase() === tag.trim().toLowerCase()).length){
-// 			group.tags.push(tag);
-// 		}
-// 	}
-// 	group.tags = group.tags.sort();
-// }
-
-export function getApiTagGroups(): ApiTagGroup[] {
+export function getApiTagGroups(order?: string[]): ApiTagGroup[] {
 
 	// create array for tagGroups
 	const tagGroups: ApiTagGroup[] = [];
@@ -78,7 +65,26 @@ export function getApiTagGroups(): ApiTagGroup[] {
 
 	});
 
+	// create sorted tagGroups
+	const tagGroupsSorted: ApiTagGroup[] = [];
+
+	// add ordered items first
+	for(let o of (order || []).filter(o => !!o) as unknown as string[]){
+		tagGroups.filter(g => g.name.trim().toLowerCase() === o.trim().toLowerCase()).map(group => {
+			if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase())){
+				tagGroupsSorted.push(group);
+			}
+		});
+	}
+
+	// add unordered groups to array
+	tagGroups.sort((a, b) => a.name.trim().toLowerCase().localeCompare(b.name.trim().toLowerCase())).map(group => {
+		if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase())){
+			tagGroupsSorted.push(group);
+		}
+	})
+
 	// return tagGroups
-	return tagGroups;
+	return tagGroupsSorted;
 
 }
