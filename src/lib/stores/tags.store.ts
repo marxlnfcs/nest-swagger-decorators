@@ -71,7 +71,7 @@ export function getApiTagGroups(order?: string[]): ApiTagGroup[] {
 	// add ordered items first
 	for(let o of (order || []).filter(o => !!o) as unknown as string[]){
 		tagGroups.filter(g => g.name.trim().toLowerCase() === o.trim().toLowerCase()).map(group => {
-			if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase())){
+			if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase()).length){
 				tagGroupsSorted.push(group);
 			}
 		});
@@ -79,7 +79,7 @@ export function getApiTagGroups(order?: string[]): ApiTagGroup[] {
 
 	// add unordered groups to array
 	tagGroups.sort((a, b) => a.name.trim().toLowerCase().localeCompare(b.name.trim().toLowerCase())).map(group => {
-		if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase())){
+		if(!tagGroupsSorted.filter(g => g.name.trim().toLowerCase() === group.name.trim().toLowerCase()).length){
 			tagGroupsSorted.push(group);
 		}
 	})
