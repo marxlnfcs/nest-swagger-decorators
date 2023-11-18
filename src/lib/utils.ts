@@ -77,11 +77,11 @@ export function extractClassRef(v: IApiClassRef): any {
   if(v === undefined || v === null){
     return null;
   }else if(Array.isArray(v)){
-    return v;
+    return v.map((e: any) => extractClassRef(e));
   }else if(isClass(v)){
     return v;
   }else if(typeof v === 'function'){
-    return v();
+    return extractClassRef(v());
   }
 }
 
