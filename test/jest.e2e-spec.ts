@@ -13,6 +13,7 @@ export class Model2 {
 
 export class Response1 {
   @ApiOneOfProperty(() => [Model1, Model2])
+  @ApiOneOfProperty([() => [Model1, Model2]])
   model: any;
 }
 

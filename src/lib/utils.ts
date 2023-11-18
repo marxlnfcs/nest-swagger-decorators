@@ -86,6 +86,19 @@ export function extractClassRef(v: IApiClassRef): any {
 }
 
 /** @internal */
+export function flatten(...items: any[]): any[] {
+  const list: any[] = [];
+  items.map(item => {
+    if(Array.isArray(item)){
+      list.push(...flatten(...item));
+    }else{
+      list.push(item);
+    }
+  });
+  return list;
+}
+
+/** @internal */
 export function getStatusMessage(status: number): string {
   switch(status){
     // 2xx success
