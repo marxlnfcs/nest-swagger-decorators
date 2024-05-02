@@ -3,10 +3,11 @@ import {IApiControllerOptions} from "../interfaces/options.model";
 import {ApiExcludeController, ApiHeader, ApiParam, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {extractOptions, extractPath, isArray, isFalse, isObject} from "../utils";
 import {ApiTagGroups} from "./tag-group.decorator";
+import { IApiRouteLike } from "../interfaces/types.model";
 
 export function ApiController(options?: IApiControllerOptions|false): ClassDecorator;
-export function ApiController(prefix: string, options?: Omit<IApiControllerOptions, 'path'>|false): ClassDecorator;
-export function ApiController(prefixOrOptions: string|IApiControllerOptions|false, opts?: IApiControllerOptions|false): ClassDecorator {
+export function ApiController(prefix: IApiRouteLike, options?: Omit<IApiControllerOptions, 'path'>|false): ClassDecorator;
+export function ApiController(prefixOrOptions: IApiRouteLike|IApiControllerOptions|false, opts?: IApiControllerOptions|false): ClassDecorator {
   return function(target: Function) {
 
     // resolve path and options

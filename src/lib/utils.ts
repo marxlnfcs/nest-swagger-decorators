@@ -48,7 +48,14 @@ export function isFalse(source: any): source is false {
 
 /** @internal */
 export function extractPath(...args: any[]): string|string[] {
-  return args.find(r => isString(r) || Array.isArray(r)) || '';
+  const res = args.find(r => isString(r) || Array.isArray(r) || (typeof r !== undefined && typeof r !== null && typeof r === 'object' && typeof r.toString === 'function')) || null;
+  if(res === undefined || res === null){
+    return '';
+  } else if(Array.isArray(res)){
+    return res.filter(i => !!i).map(i => i.toString());
+  }else{
+    return res.toString();
+  }
 }
 
 /** @internal */

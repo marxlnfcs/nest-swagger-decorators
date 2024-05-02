@@ -1,14 +1,14 @@
-import {HttpException, Type} from "@nestjs/common";
-import {IApiBodyOptions, IApiHeaderOptions, IApiParamOptions, IApiQueryOptions} from "./request-options.model";
-import {IApiResponseOptions} from "./response-options.model";
-import {ApiResponseOptions} from "@nestjs/swagger/dist/decorators/api-response.decorator";
-import {ApiPropertyOptions} from "@nestjs/swagger";
+import { HttpException, Type } from "@nestjs/common";
+import { IApiBodyOptions, IApiHeaderOptions, IApiParamOptions, IApiQueryOptions } from "./request-options.model";
+import { IApiResponseOptions } from "./response-options.model";
+import { ApiResponseOptions } from "@nestjs/swagger/dist/decorators/api-response.decorator";
+import { ApiPropertyOptions } from "@nestjs/swagger";
+import { IApiRouteLike } from "./types.model";
 
-export type IApiRoutePath = string|string[];
 export interface IApiRouteOptions {
 
     // path
-    path?: IApiRoutePath;
+    path?: IApiRouteLike;
 
     // operation
     summary?: string;
@@ -35,7 +35,7 @@ export interface IApiRouteOptions {
 export interface IApiControllerOptions {
 
     // path
-    path?: IApiRoutePath;
+    path?: IApiRouteLike;
 
     // tags
     tagGroups?: string[];

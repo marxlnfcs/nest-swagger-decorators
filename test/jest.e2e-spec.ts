@@ -1,5 +1,5 @@
 import { ApiClassProperty, ApiController, ApiGet, ApiOneOfProperty, ApiStringProperty } from "../src";
-import {getApiTagGroups} from "../src/lib/stores/tags.store";
+import { getApiTagGroups } from "../src/lib/stores/tags.store";
 
 export class Model1 {
   @ApiStringProperty()

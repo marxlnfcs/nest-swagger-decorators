@@ -11,3 +11,6 @@ export type IApiClassRefListDefFn = [() => Type[]]|(() => Type[]);
 export type IApiClassRefList = IApiClassRefListDef|IApiClassRefListDefFn;
 
 export type IApiClassRef = IApiClassRefSingle|IApiClassRefList|IApiClassRefSingleList;
+
+export type IApiRouteLike = string|IApiRouteLikeFn|Array<string|IApiRouteLikeFn>;
+export type IApiRouteLikeFn = { toString: () => string };
