@@ -1,6 +1,6 @@
-import {HttpException, RequestMethod, Type} from "@nestjs/common";
-import {IApiClassRef, IApiClassRefSingle, IApiClassRefSingleList} from "./interfaces/types.model";
-import {getSchemaPath} from "@nestjs/swagger";
+import { HttpException, RequestMethod, Type } from "@nestjs/common";
+import { IApiClassRef, IApiClassRefSingle, IApiClassRefSingleList, IApiRouteLike } from "./interfaces/types.model";
+import { getSchemaPath } from "@nestjs/swagger";
 
 export function getApiSchemaPath<T>(classRef: IApiClassRefSingle|IApiClassRefSingleList): string {
   return getSchemaPath(classRef as any);
@@ -48,19 +48,22 @@ export function isFalse(source: any): source is false {
 
 /** @internal */
 export function extractPath(...args: any[]): string|string[] {
-  const res = args.find(r => isString(r) || Array.isArray(r) || (typeof r !== undefined && typeof r !== null && typeof r === 'object' && typeof r.toString === 'function')) || null;
-  if(res === undefined || res === null){
-    return '';
-  } else if(Array.isArray(res)){
-    return res.filter(i => !!i).map(i => i.toString());
-  }else{
-    return res.toString();
+  const paths = args.filter(r => isRouteLike(r));
+  for(let p of paths) {
+    if(p === undefined || p === null){
+      // skip
+    } else if(Array.isArray(p)){
+      return p.filter(i => !!i).map(i => i.toString());
+    }else{
+      return (typeof p === 'string' ? p : isRouteLike(p) ? p.toString() : null) || '/';
+    }
   }
+  return '/';
 }
 
 /** @internal */
 export function extractOptions<T = any>(...args: any[]): T|false {
-  return args.find(r => !isNil(r) && isObject(r) && !Array.isArray(r)) ?? false;
+  return args.find(r => !isNil(r) && (isObject(r) || isFalse(r)) && !Array.isArray(r) && !isRouteLike(r)) ?? {};
 }
 
 /** @internal */
@@ -72,6 +75,22 @@ export function extractStatus(method: RequestMethod|null, ...args: any[]): numbe
 /** @internal */
 export function extractString(...args: any[]): string|null {
   return args.find(r => isString(r)) || null;
+}
+
+/** @internal */
+export function isRouteLike(v: any): v is IApiRouteLike {
+  if(v === undefined || v === null){
+    return false;
+  }else if(Array.isArray(v)){
+    return true;
+  }else{
+    if(typeof v === 'string'){
+      return true;
+    }else if(typeof v === 'object' && v.toString !== Object.prototype.toString){
+      return true;
+    }
+  }
+  return false;
 }
 
 /** @internal */

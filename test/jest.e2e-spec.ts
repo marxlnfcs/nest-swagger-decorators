@@ -1,5 +1,8 @@
 import { ApiClassProperty, ApiController, ApiGet, ApiOneOfProperty, ApiStringProperty } from "../src";
 import { getApiTagGroups } from "../src/lib/stores/tags.store";
+import { Get } from "@nestjs/common";
+
+export const TestPath = { toString: () => '/foo/bar1' }
 
 export class Model1 {
   @ApiStringProperty()
@@ -22,7 +25,7 @@ export class Response2 {
   model: any;
 }
 
-@ApiController({
+@ApiController(TestPath, {
   tags: ['Tag1'],
   tagGroups: ['Global', 'Controller1']
 })
@@ -41,11 +44,69 @@ export class Controller1 {
   route2() {}
 }
 
-@ApiController({
+@ApiController(TestPath,{
   tags: ['Tag4'],
   tagGroups: ['Global', 'Controller2']
 })
 export class Controller2 {
+  @ApiGet({
+    tags: ['Tag5'],
+    tagGroups: ['Global']
+  })
+  route1() {}
+
+  @ApiGet({
+    tags: ['Tag6'],
+  })
+  route2() {}
+}
+
+@ApiController(TestPath)
+export class Controller3 {
+  @ApiGet({
+    tags: ['Tag5'],
+    tagGroups: ['Global']
+  })
+  route1() {}
+
+  @ApiGet({
+    tags: ['Tag6'],
+  })
+  route2() {}
+}
+
+@ApiController({
+  path: TestPath
+})
+export class Controller4 {
+  @ApiGet({
+    tags: ['Tag5'],
+    tagGroups: ['Global']
+  })
+  route1() {}
+
+  @ApiGet({
+    tags: ['Tag6'],
+  })
+  route2() {}
+}
+
+@ApiController({})
+export class Controller5 {
+  @ApiGet({
+    tags: ['Tag5'],
+    tagGroups: ['Global']
+  })
+  route1() {}
+
+  @ApiGet({
+    tags: ['Tag6'],
+  })
+  route2() {}
+}
+
+@ApiController(false)
+export class Controller6 {
   @ApiGet({
     tags: ['Tag5'],
     tagGroups: ['Global']
@@ -63,8 +124,8 @@ describe('Testing Library', () => {
 
   // check if tagGroups are equals a special length
   describe('Testing tagGroups', () => {
-    it('tagGroups.length should be 5', async () => {
-      expect(groups.length).toBeTruthy();
+    it('tagGroups.length should be 3', async () => {
+      expect(groups.length === 3).toBeTruthy();
     });
   });
 
