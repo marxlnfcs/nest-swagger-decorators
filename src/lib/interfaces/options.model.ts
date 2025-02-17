@@ -4,6 +4,11 @@ import { IApiResponseOptions } from "./response-options.model";
 import { ApiResponseOptions } from "@nestjs/swagger/dist/decorators/api-response.decorator";
 import { ApiPropertyOptions } from "@nestjs/swagger";
 import { IApiRouteLike } from "./types.model";
+import {
+    EnumAllowedTypes,
+    SchemaObjectMetadata
+} from "@nestjs/swagger/dist/interfaces/schema-object-metadata.interface";
+import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
 
 export interface IApiRouteOptions {
 
@@ -53,6 +58,17 @@ export interface IApiExceptionOptions extends Omit<ApiResponseOptions, 'status'>
 }
 export type IApiDefinedExceptionOptions = Omit<IApiExceptionOptions, 'status'>;
 
-export type IApiPropertyOptions = ApiPropertyOptions;
+interface IApiSchemaObjectCommonMetadata extends Omit<SchemaObject, 'type' | 'required' | 'properties' | 'enum'> {
+    isArray?: boolean;
+    name?: string;
+    enum?: EnumAllowedTypes;
+}
+
+export type IApiPropertyOptions = ApiPropertyOptions | IApiPropertyOptionsCustom;
+export type IApiPropertyOptionsCustom = (IApiSchemaObjectCommonMetadata & {
+    type?: any;
+    required?: boolean;
+});
+
 export type IApiTypedOptions = Omit<IApiPropertyOptions, 'type'>;
 export type IApiTypedOptionalOptions = Omit<IApiPropertyOptions, 'type'|'required'>;
