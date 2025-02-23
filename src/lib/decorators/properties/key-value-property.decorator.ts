@@ -1,7 +1,9 @@
-import { extractOptions, extractString } from "../../utils";
-import { applyDecorators } from "@nestjs/common";
+import { extractClassRef, extractOptions, extractString, getApiSchemaPath, resolveClassRef } from "../../utils";
+import { applyDecorators, Type } from "@nestjs/common";
 import { ApiProperty, ApiPropertyOptional } from "./property.decorator";
 import { SchemaObject } from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
+import { IApiClassRefSingle } from "../../interfaces/types.model";
+import { ApiExtraModels } from "@nestjs/swagger";
 
 export function ApiKeyValueProperty(options?: SchemaObject): PropertyDecorator;
 export function ApiKeyValueProperty(description?: string, options?: SchemaObject): PropertyDecorator;
@@ -21,4 +23,34 @@ export function ApiKeyValuePropertyOptional(descriptionOrOptions?: string|Schema
     type: 'object',
     additionalProperties: Object.assign(options)
   }));
+}
+
+export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, options?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator;
+export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, description?: string, options?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator;
+export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, descriptionOrOptions?: string|Omit<SchemaObject, 'type'|'$ref'>, opts?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator {
+  const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
+  return applyDecorators(
+    ApiExtraModels(extractClassRef(classRef)),
+    ApiProperty(description, {
+      type: 'object',
+      additionalProperties: Object.assign(options, {
+        $ref: getApiSchemaPath(classRef),
+      })
+    })
+  );
+}
+
+export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, options?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator;
+export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, description?: string, options?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator;
+export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, descriptionOrOptions?: string|Omit<SchemaObject, 'type'|'$ref'>, opts?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator {
+  const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
+  return applyDecorators(
+    ApiExtraModels(extractClassRef(classRef)),
+    ApiPropertyOptional(description, {
+      type: 'object',
+      additionalProperties: Object.assign(options, {
+        $ref: getApiSchemaPath(classRef),
+      })
+    })
+  );
 }
