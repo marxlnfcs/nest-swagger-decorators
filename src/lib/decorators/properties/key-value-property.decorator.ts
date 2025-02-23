@@ -32,7 +32,7 @@ export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, descripti
   return applyDecorators(
     function(target: any) {
       const ctor = typeof target === 'function' ? target : target.constructor;
-      ApiExtraModels(extractClassRef(classRef), ctor);
+      ApiExtraModels(extractClassRef(classRef))(ctor);
     },
     ApiProperty(description, {
       type: 'object',
@@ -50,7 +50,7 @@ export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, d
   return applyDecorators(
     function(target: any) {
       const ctor = typeof target === 'function' ? target : target.constructor;
-      ApiExtraModels(extractClassRef(classRef), ctor);
+      ApiExtraModels(extractClassRef(classRef))(ctor);
     },
     ApiPropertyOptional(description, {
       type: 'object',
