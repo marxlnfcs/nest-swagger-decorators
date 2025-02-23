@@ -30,7 +30,10 @@ export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, descripti
 export function ApiKeyValueClassProperty(classRef: IApiClassRefSingle, descriptionOrOptions?: string|Omit<SchemaObject, 'type'|'$ref'>, opts?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator {
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   return applyDecorators(
-    ApiExtraModels(extractClassRef(classRef)),
+    function(target: any) {
+      const ctor = typeof target === 'function' ? target : target.constructor;
+      ApiExtraModels(extractClassRef(classRef), ctor);
+    },
     ApiProperty(description, {
       type: 'object',
       additionalProperties: Object.assign(options, {
@@ -45,7 +48,10 @@ export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, d
 export function ApiKeyValueClassPropertyOptional(classRef: IApiClassRefSingle, descriptionOrOptions?: string|Omit<SchemaObject, 'type'|'$ref'>, opts?: Omit<SchemaObject, 'type'|'$ref'>): PropertyDecorator {
   const [ description, options ] = [ extractString(descriptionOrOptions, opts?.description), extractOptions(descriptionOrOptions, opts) || {} ];
   return applyDecorators(
-    ApiExtraModels(extractClassRef(classRef)),
+    function(target: any) {
+      const ctor = typeof target === 'function' ? target : target.constructor;
+      ApiExtraModels(extractClassRef(classRef), ctor);
+    },
     ApiPropertyOptional(description, {
       type: 'object',
       additionalProperties: Object.assign(options, {
